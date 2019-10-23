@@ -1,0 +1,45 @@
+<?xml version = "1.0" encoding = "UTF-8"?>
+<beans xmlns = "http://www.springframework.org/schema/beans"
+   xmlns:xsi = "http://www.w3.org/2001/XMLSchema-instance" 
+   xmlns:aop = "http://www.springframework.org/schema/aop"
+   xsi:schemaLocation = "http://www.springframework.org/schema/beans
+   http://www.springframework.org/schema/beans/spring-beans-3.0.xsd 
+   http://www.springframework.org/schema/aop 
+   http://www.springframework.org/schema/aop/spring-aop-3.0.xsd ">
+   
+ <aop:config>
+   
+   <aop:aspect id ="testAspect" ref = "logging">
+  	 <!-- Declaring aop:pointcut -->
+      <aop:pointcut id = "selectAll"
+         expression = "execution(* com.learn.spring.aop.*.*(..))"/>
+
+      <!-- a before advice definition -->
+      <aop:before pointcut-ref = "selectAll" method = "beforeAdvice"/>
+
+      <!-- an after advice definition -->
+      <aop:after pointcut-ref = "selectAll" method = "afterAdvice"/>
+
+      <!-- an after-returning advice definition -->
+      <!--The doRequiredTask method must have parameter named retVal -->
+      <aop:after-returning pointcut-ref = "selectAll"
+         returning = "retVal" method = "afterReturningAdvice"/>
+
+      <!-- an after-throwing advice definition -->
+      <!--The doRequiredTask method must have parameter named ex -->
+      <aop:after-throwing pointcut-ref = "selectAll"
+         throwing = "ex" method = "afterThrowingAdvice"/>
+   
+   </aop:aspect>
+</aop:config>
+
+ <!-- Definition Bean where Aspect should intersect -->
+   <bean id = "testAop" class = "com.learn.spring.aop.TestAopBean">
+      <property name = "testVariable" value = "Yo!" />
+   </bean>
+
+<!-- Definition for logging aspect -->
+	<bean id = "logging" class = "com.learn.spring.aop.LoggerAspect"/> 
+   
+   
+ </beans>
